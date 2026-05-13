@@ -41,7 +41,26 @@ jobs:
       - run: ruff check app alembic tests
       - run: ruff format --check app alembic tests
       - run: black --check app alembic tests
-      - run: pytest -q --tb=short
+      - name: Wait for PostgreSQL (TCP)
+        run: |
+          python - <<'PY'
+          import socket
+          import time
+
+          for i in range(60):
+              try:
+                  with socket.create_connection(("127.0.0.1", 5432), timeout=2):
+                      pass
+                  print("postgres tcp ok", i)
+                  break
+              except OSError as e:
+                  print("retry", i, e)
+                  time.sleep(1)
+          else:
+              raise SystemExit("Postgres not reachable on 127.0.0.1:5432")
+          PY
+      - name: Run tests
+        run: python -m pytest -vv --tb=long --color=no
 
   frontend:
     runs-on: ubuntu-latest

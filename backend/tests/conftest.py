@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import os
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -37,12 +35,17 @@ def pytest_configure(config: pytest.Config) -> None:
 
 @pytest.fixture(scope="session", autouse=True)
 def _alembic_upgrade() -> None:
-    subprocess.run(
-        [sys.executable, "-m", "alembic", "upgrade", "head"],
-        cwd=_BACKEND_ROOT,
-        env={**os.environ},
-        check=True,
-    )
+    """Migraciones en proceso (misma env que pytest y Alembic)."""
+    from alembic import command
+    from alembic.config import Config
+
+    cwd_before = Path.cwd()
+    try:
+        os.chdir(_BACKEND_ROOT)
+        cfg = Config(str(_BACKEND_ROOT / "alembic.ini"))
+        command.upgrade(cfg, "head")
+    finally:
+        os.chdir(cwd_before)
     yield
 
 

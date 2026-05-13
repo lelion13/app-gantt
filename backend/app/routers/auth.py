@@ -34,6 +34,6 @@ def login(
         )
     token = create_access_token(
         subject=str(user.id),
-        role=user.app_role.value,
+        role=str(user.app_role),
     )
     return TokenResponse(access_token=token)
