@@ -16,7 +16,8 @@ _BACKEND_ROOT = Path(__file__).resolve().parents[1]
 def pytest_configure(config: pytest.Config) -> None:
     os.environ.setdefault(
         "DATABASE_URL",
-        "postgresql+psycopg://app_gantt:app_gantt@127.0.0.1:5432/app_gantt_test",
+        "postgresql+psycopg://app_gantt:app_gantt@127.0.0.1:5432/app_gantt_test"
+        "?sslmode=disable",
     )
     os.environ.setdefault(
         "JWT_SECRET",

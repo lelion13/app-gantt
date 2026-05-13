@@ -98,7 +98,7 @@ docker compose exec db psql -U app_gantt -d app_gantt -c "CREATE DATABASE app_ga
 cd backend
 pip install -e ".[dev]"
 # PowerShell (coincide con conftest por defecto):
-$env:DATABASE_URL="postgresql+psycopg://app_gantt:app_gantt@127.0.0.1:5432/app_gantt_test"
+$env:DATABASE_URL="postgresql+psycopg://app_gantt:app_gantt@127.0.0.1:5432/app_gantt_test?sslmode=disable"
 python -m pytest -q
 ```
 

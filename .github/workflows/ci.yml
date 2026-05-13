@@ -23,7 +23,8 @@ jobs:
           --health-timeout=5s
           --health-retries=20
     env:
-      DATABASE_URL: postgresql+psycopg://app_gantt:app_gantt@127.0.0.1:5432/app_gantt_test
+      # sslmode=disable evita fallos de negociación TLS contra el Postgres del servicio (runner ↔ localhost).
+      DATABASE_URL: postgresql+psycopg://app_gantt:app_gantt@127.0.0.1:5432/app_gantt_test?sslmode=disable
       JWT_SECRET: ci_jwt_secret_at_least_32_characters_long_xx
       BOOTSTRAP_ADMIN_EMAIL: ""
       BOOTSTRAP_ADMIN_PASSWORD: ""
@@ -40,7 +41,7 @@ jobs:
       - run: ruff check app alembic tests
       - run: ruff format --check app alembic tests
       - run: black --check app alembic tests
-      - run: pytest -q
+      - run: pytest -q --tb=short
 
   frontend:
     runs-on: ubuntu-latest
