@@ -307,6 +307,9 @@ def transfer_project_pm(
             detail="Estado de membresías inconsistente",
         )
     old_row.role = ProjectRole.colaborador
+    # Flush antes de promover al nuevo PM: el índice único parcial (un solo `pm` por
+    # proyecto) falla si ambos UPDATE van en orden desfavorable en un solo commit.
+    db.flush()
     new_row.role = ProjectRole.pm
     project.project_manager_id = new_project_manager_id
     try:
