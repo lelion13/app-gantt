@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: app_gantt
+          POSTGRES_PASSWORD: app_gantt
+          POSTGRES_DB: app_gantt_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U app_gantt -d app_gantt_test"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      DATABASE_URL: postgresql+psycopg://app_gantt:app_gantt@127.0.0.1:5432/app_gantt_test
+      JWT_SECRET: ci_jwt_secret_at_least_32_characters_long_xx
+      BOOTSTRAP_ADMIN_EMAIL: ""
+      BOOTSTRAP_ADMIN_PASSWORD: ""
+      DISABLE_LOGIN_RATE_LIMIT: "1"
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check app alembic tests
+      - run: ruff format --check app alembic tests
+      - run: black --check app alembic tests
+      - run: pytest -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run build

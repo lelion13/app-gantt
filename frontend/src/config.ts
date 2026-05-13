@@ -1,0 +1,3 @@
+/** Base de la API (Vite proxy en dev: mismo origen → `/api` → backend). */
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "/api/v1";

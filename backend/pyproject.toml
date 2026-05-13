@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "app-gantt-backend"
+version = "0.1.0"
+description = "Backend API (FastAPI) — app-gantt MVP"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "alembic==1.14.1",
+    "bcrypt==4.2.1",
+    "email-validator==2.2.0",
+    "fastapi==0.115.8",
+    "psycopg[binary]==3.2.4",
+    "pydantic-settings==2.7.1",
+    "PyJWT==2.10.1",
+    "sqlalchemy==2.0.37",
+    "uvicorn[standard]==0.34.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black==25.1.0",
+    "httpx==0.28.1",
+    "pytest==8.3.4",
+    "ruff==0.9.6",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+src = ["app"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# Anotaciones con comillas para relaciones SQLAlchemy / referencias adelantadas
+"app/models/**/*.py" = ["UP037", "F821", "I001"]
+"alembic/env.py" = ["I001", "E402"]
+"alembic/versions/*.py" = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]

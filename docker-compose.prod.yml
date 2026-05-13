@@ -1,0 +1,82 @@
+# Producción: imágenes desde GHCR + Postgres + labels Traefik (sin red externa;
+# Traefik en el host con Docker provider, patrón tipo app-cfc).
+#
+# Uso:
+#   cp .env.example .env
+#   # Completar POSTGRES_*, DATABASE_URL, GHCR_*_IMAGE, GANTT_HOST, JWT_*, etc.
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# DATABASE_URL debe apuntar al servicio `db` (host `db`, puerto 5432).
+
+name: app-gantt
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  backend:
+    image: ${GHCR_BACKEND_IMAGE}
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ALG: ${JWT_ALG:-HS256}
+      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-60}
+      APP_TIMEZONE: ${APP_TIMEZONE}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-}
+    expose:
+      - "8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - internal
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app-gantt-api.rule=Host(`${GANTT_HOST}`) && PathPrefix(`/api`)
+      - traefik.http.routers.app-gantt-api.entrypoints=websecure
+      - traefik.http.routers.app-gantt-api.tls=true
+      - traefik.http.routers.app-gantt-api.tls.certresolver=letsencrypt
+      - traefik.http.routers.app-gantt-api.priority=100
+      - traefik.http.services.app-gantt-api.loadbalancer.server.port=8000
+
+  frontend:
+    image: ${GHCR_FRONTEND_IMAGE}
+    restart: unless-stopped
+    depends_on:
+      - backend
+    expose:
+      - "80"
+    networks:
+      - internal
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app-gantt-web.rule=Host(`${GANTT_HOST}`)
+      - traefik.http.routers.app-gantt-web.entrypoints=websecure
+      - traefik.http.routers.app-gantt-web.tls=true
+      - traefik.http.routers.app-gantt-web.tls.certresolver=letsencrypt
+      - traefik.http.routers.app-gantt-web.priority=10
+      - traefik.http.services.app-gantt-web.loadbalancer.server.port=80
+
+volumes:
+  postgres_data_prod:
+
+networks:
+  internal:
+    driver: bridge
