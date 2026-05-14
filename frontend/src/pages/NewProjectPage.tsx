@@ -4,9 +4,19 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { ApiError, apiJson } from "@/lib/api";
 import { taskStatusLabel } from "@/lib/labels";
-import type { LifecycleStatus, ProjectCreateBody, ProjectDetail, UserPublic } from "@/types/api";
+import type {
+  LifecycleStatus,
+  ProjectCreateBody,
+  ProjectDetail,
+  UserPublic,
+} from "@/types/api";
 
-const STATUSES: LifecycleStatus[] = ["pending", "estimated", "in_progress", "completed"];
+const STATUSES: LifecycleStatus[] = [
+  "pending",
+  "estimated",
+  "in_progress",
+  "completed",
+];
 
 function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
@@ -45,7 +55,8 @@ export default function NewProjectPage() {
         if (!cancelled) setUsers(rows);
       })
       .catch((e: unknown) => {
-        if (!cancelled) setUsersErr(e instanceof Error ? e.message : "Error al cargar usuarios");
+        if (!cancelled)
+          setUsersErr(e instanceof Error ? e.message : "Error al cargar usuarios");
       });
     return () => {
       cancelled = true;
@@ -73,7 +84,9 @@ export default function NewProjectPage() {
     const pm = role === "admin" ? pmId : userId;
     if (!pm) {
       setSubmitErr(
-        role === "admin" ? "Elegí un responsable del proyecto (PM)." : "Sesión inválida.",
+        role === "admin"
+          ? "Elegí un responsable del proyecto (PM)."
+          : "Sesión inválida.",
       );
       return;
     }
@@ -232,14 +245,16 @@ export default function NewProjectPage() {
         ) : (
           <p className="text-sm text-slate-400">
             Vas a ser el{" "}
-            <strong className="text-slate-200">responsable del proyecto (PM)</strong>. Podés
-            invitar colaboradores después desde el detalle del proyecto.
+            <strong className="text-slate-200">responsable del proyecto (PM)</strong>.
+            Podés invitar colaboradores después desde el detalle del proyecto.
           </p>
         )}
 
         {role === "admin" && pmId ? (
           <fieldset className="space-y-2">
-            <legend className="text-sm text-slate-300">Colaboradores iniciales (opcional)</legend>
+            <legend className="text-sm text-slate-300">
+              Colaboradores iniciales (opcional)
+            </legend>
             <p className="text-xs text-slate-500">
               Solo verás el proyecto en el panel si sos PM o colaborador del mismo.
             </p>
