@@ -5,6 +5,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import AdminUsersPage from "@/pages/AdminUsersPage";
 import DashboardPage from "@/pages/DashboardPage";
 import LoginPage from "@/pages/LoginPage";
+import NewProjectPage from "@/pages/NewProjectPage";
 import ProjectPage from "@/pages/ProjectPage";
 import ProjectTasksPage from "@/pages/ProjectTasksPage";
 import TaskDetailPage from "@/pages/TaskDetailPage";
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route element={<ProtectedLayout />}>
             <Route path="/" element={<DashboardPage />} />
+            <Route path="/projects/new" element={<NewProjectPage />} />
             <Route path="/projects/:projectId" element={<ProjectPage />} />
             <Route path="/projects/:projectId/tasks" element={<ProjectTasksPage />} />
             <Route

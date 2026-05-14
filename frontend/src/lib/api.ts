@@ -1,6 +1,17 @@
 import { API_BASE_URL } from "@/config";
 import { TOKEN_KEY } from "@/lib/session";
 
+/** Error HTTP de la API (status + mensaje seguro para mostrar). */
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
 async function readErrorMessage(res: Response): Promise<string> {
   try {
     const j: unknown = await res.json();
@@ -52,7 +63,7 @@ export async function apiJson<T>(path: string, init: ApiFetchOptions = {}): Prom
   const res = await apiFetch(path, init);
   if (!res.ok) {
     const msg = await readErrorMessage(res);
-    throw new Error(msg);
+    throw new ApiError(res.status, msg);
   }
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;

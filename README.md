@@ -6,6 +6,7 @@ Monorepo del MVP: seguimiento de proyectos y **avance real por tarea** (FastAPI 
 
 - **[proyecto.md](./proyecto.md)** — especificación funcional y técnica.
 - **[docs/plan-implementacion-mvp.md](./docs/plan-implementacion-mvp.md)** — plan de fases e implementación.
+- **[docs/adicion-ui-alta-proyecto.md](./docs/adicion-ui-alta-proyecto.md)** — alta de proyecto desde el panel (post-MVP / adición al spec inicial).
 
 ## Requisitos
 

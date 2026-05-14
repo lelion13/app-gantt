@@ -174,7 +174,7 @@ En paralelo posible: **1.4–1.5** con **8.1**; **9.1** incrementales desde fase
 - [ ] `docker compose up` (local) OK  
 - [ ] Login con usuario existente  
 - [ ] Admin crea usuarios  
-- [ ] Admin o PM global crea proyecto con PM + colaboradores iniciales  
+- [x] Admin o PM global crea proyecto con PM + colaboradores iniciales — **UI:** panel → “Nuevo proyecto” (`/projects/new`); **admin** elige PM y colaboradores; **pm** (D1) es PM de sí mismo sin listado `/users`  
 - [ ] PM gestiona miembros  
 - [ ] PM CRUD tareas y asignaciones; outbox con evento al asignar  
 - [ ] Colaborador actualiza solo tareas asignadas; task updates según reglas  

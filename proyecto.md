@@ -44,7 +44,7 @@ Todos los servicios deben estar containerizados y listos para despliegue.
 **Alta de proyecto (una transacción)**
 
 - Pueden crear proyecto: usuarios con rol de aplicación `**admin`** o `**pm`** (rol global).
-- El `POST` de creación incluye datos del proyecto + `project_manager_id` + lista opcional `**initial_collaborator_user_ids**`.
+- El `POST` de creación incluye datos del proyecto + `project_manager_id` + lista opcional `**initial_collaborator_user_ids`**.
 - El backend persiste proyecto + `project_users`: exactamente **un** `pm` (el `project_manager_id`) + colaboradores iniciales.
 
 **Después del alta**
@@ -149,8 +149,8 @@ Estructura sugerida: `routers/`, `services/`, `models/`, `schemas/`, `core/` (co
 
 - `**POST /api/v1/projects`**: creación con `project_manager_id` + `initial_collaborator_user_ids` opcional; respuesta incluye proyecto y `members`.
 - `**PATCH /api/v1/projects/{id}`**: solo PM del proyecto; no cambia `project_manager_id` por este endpoint.
-- `**POST/DELETE /api/v1/projects/{id}/members**`: solo PM del proyecto; en `POST` de miembro nuevo, rol típico `colaborador` (promoción a PM vía flujo dedicado).
-- `**POST /api/v1/projects/{id}/transfer-pm**` (o ruta equivalente): **incluido en el primer entregable** — ver sección “Transferencia de PM”.
+- `**POST/DELETE /api/v1/projects/{id}/members`**: solo PM del proyecto; en `POST` de miembro nuevo, rol típico `colaborador` (promoción a PM vía flujo dedicado).
+- `**POST /api/v1/projects/{id}/transfer-pm`** (o ruta equivalente): **incluido en el primer entregable** — ver sección “Transferencia de PM”.
 
 ---
 

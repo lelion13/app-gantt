@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import { useAuth } from "@/context/AuthContext";
 import { apiJson } from "@/lib/api";
 import { taskStatusLabel } from "@/lib/labels";
 import type { DashboardView, ProjectListItem, TaskDashboardItem } from "@/types/api";
@@ -72,6 +73,8 @@ function TaskBucket({
 }
 
 export default function DashboardPage() {
+  const { role } = useAuth();
+  const canCreateProject = role === "admin" || role === "pm";
   const [projects, setProjects] = useState<ProjectListItem[] | null>(null);
   const [projErr, setProjErr] = useState<string | null>(null);
 
@@ -99,7 +102,17 @@ export default function DashboardPage() {
       </div>
 
       <section className="rounded-xl border border-slate-800 bg-slate-900/30 p-3">
-        <h2 className="text-sm font-semibold text-white">Proyectos</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold text-white">Proyectos</h2>
+          {canCreateProject ? (
+            <Link
+              to="/projects/new"
+              className="rounded-md bg-emerald-800/80 px-2.5 py-1 text-xs font-medium text-emerald-50 hover:bg-emerald-700/90"
+            >
+              Nuevo proyecto
+            </Link>
+          ) : null}
+        </div>
         <p className="text-xs text-slate-500">Donde participás como miembro.</p>
         <ul className="mt-3 space-y-2">
           {projErr ? (

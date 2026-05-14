@@ -36,6 +36,17 @@ export type ProjectDetail = ProjectListItem & {
   members: ProjectMemberOut[];
 };
 
+/** Cuerpo de `POST /projects` — alineado a `ProjectCreate` en backend. */
+export type ProjectCreateBody = {
+  title: string;
+  description: string | null;
+  start_date: string;
+  end_date: string;
+  status: LifecycleStatus;
+  project_manager_id: string;
+  initial_collaborator_user_ids: string[];
+};
+
 export type TaskPublic = {
   id: string;
   project_id: string;
