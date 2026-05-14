@@ -62,6 +62,29 @@ export type TaskAssigneeOut = { user_id: string; name: string; email: string };
 
 export type TaskDetail = TaskPublic & { assignees: TaskAssigneeOut[] };
 
+/** Cuerpo de `POST /projects/{id}/tasks` — alineado a `TaskCreate` en backend. */
+export type TaskCreateBody = {
+  title: string;
+  description: string | null;
+  start_date: string;
+  end_date: string;
+  status: LifecycleStatus;
+};
+
+/** PATCH parcial — solo incluir claves enviadas al servidor. */
+export type TaskUpdateBody = Partial<{
+  title: string;
+  description: string | null;
+  start_date: string;
+  end_date: string;
+  status: LifecycleStatus;
+  is_active: boolean;
+}>;
+
+export type TaskAssigneeAddBody = {
+  user_id: string;
+};
+
 export type TaskUpdatePublic = {
   id: string;
   task_id: string;

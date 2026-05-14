@@ -176,7 +176,7 @@ En paralelo posible: **1.4–1.5** con **8.1**; **9.1** incrementales desde fase
 - [ ] Admin crea usuarios  
 - [x] Admin o PM global crea proyecto con PM + colaboradores iniciales — **UI:** panel → “Nuevo proyecto” (`/projects/new`); **admin** elige PM y colaboradores; **pm** (D1) es PM de sí mismo sin listado `/users`  
 - [ ] PM gestiona miembros  
-- [ ] PM CRUD tareas y asignaciones; outbox con evento al asignar  
+- [x] PM CRUD tareas y asignaciones; outbox con evento al asignar — **UI:** lista `/projects/:id/tasks` (alta + listado), detalle con edición/assignees/delete según rol; outbox sigue siendo lado servidor al asignar    
 - [ ] Colaborador actualiza solo tareas asignadas; task updates según reglas  
 - [ ] Dashboard: mis / en progreso / vencidas  
 - [ ] Transfer PM  
